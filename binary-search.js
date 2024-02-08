@@ -10,9 +10,8 @@ function binarySearch(arr, key) {
       low = mid + 1;
     } else if (key < arr[mid]) {
       high = mid - 1;
-    } else {
-      return -1;
     }
+    return -1;
   }
 }
 
