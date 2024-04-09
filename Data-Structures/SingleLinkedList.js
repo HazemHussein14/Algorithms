@@ -41,16 +41,16 @@ class SingleLinkedList {
     return null;
   }
 
-  isExist(node) {
-    if (this.unique && this.find(node.data)) {
+  isExist(_data) {
+    if (this.unique && this.find(_data)) {
       return true;
     } else {
       return false;
     }
   }
 
-  canInsert(node) {
-    if (this.isExist(node)) {
+  canInsert(_data) {
+    if (this.isExist(_data)) {
       console.log("node already exists");
       return false;
     } else {
@@ -68,9 +68,9 @@ class SingleLinkedList {
   }
 
   insertLast(_data) {
-    const newNode = new LinkedListNode(_data);
+    if (!this.canInsert(_data)) return;
 
-    if (!this.canInsert(newNode)) return;
+    const newNode = new LinkedListNode(_data);
 
     if (this.head === null) {
       this.head = newNode;
@@ -83,9 +83,9 @@ class SingleLinkedList {
   }
 
   insertAfter(node, _data) {
-    const newNode = new LinkedListNode(_data);
+    if (!this.canInsert(_data)) return;
 
-    if (!this.canInsert(newNode)) return;
+    const newNode = new LinkedListNode(_data);
 
     newNode.next = node.next;
     node.next = newNode;
@@ -96,9 +96,9 @@ class SingleLinkedList {
   }
 
   insertBefore(node, _data) {
-    const newNode = new LinkedListNode(_data);
+    if (!this.canInsert(_data)) return;
 
-    if (!this.canInsert(newNode)) return;
+    const newNode = new LinkedListNode(_data);
 
     newNode.next = node;
     const parentNode = this.findParent(node);
@@ -130,6 +130,28 @@ class SingleLinkedList {
     }
   }
 
+  insertFirst(_data) {
+    if (!this.canInsert(_data)) return;
+
+    const newNode = new LinkedListNode(_data);
+
+    if (this.head === null) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    this.length++;
+  }
+
+  deleteHead() {
+    if (this.head === null) return;
+
+    this.head = this.head.next;
+    this.length--;
+  }
+
   printList() {
     let output = "";
     for (let itr = this.begin(); itr.current() !== null; itr.next()) {
@@ -156,6 +178,8 @@ list.insertLast(3);
 
 // list.deleteNode(list.find(1));
 
-list.printList();
+// list.printList();
+
+export default SingleLinkedList
 
 // console.log("head: " + list.head.data);
