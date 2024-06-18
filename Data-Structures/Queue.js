@@ -34,20 +34,22 @@ class Queue {
   }
 }
 
-const queue = new Queue();
+// const queue = new Queue();
 
-console.log("hasData: " + queue.hasData());
-queue.enqueue(8);
-queue.enqueue(16);
-queue.enqueue(32);
-queue.enqueue(64);
-console.log("hasData: " + queue.hasData());
-console.log("size: " + queue.size());
-queue.print();
+// console.log("hasData: " + queue.hasData());
+// queue.enqueue(8);
+// queue.enqueue(16);
+// queue.enqueue(32);
+// queue.enqueue(64);
+// console.log("hasData: " + queue.hasData());
+// console.log("size: " + queue.size());
+// queue.print();
 
-while (queue.hasData()) {
-  console.log("peek: " + queue.peek());
-  console.log("dequeue: " + queue.dequeue());
-  console.log("size: " + queue.size());
-  queue.print();
-}
+// while (queue.hasData()) {
+//   console.log("peek: " + queue.peek());
+//   console.log("dequeue: " + queue.dequeue());
+//   console.log("size: " + queue.size());
+//   queue.print();
+// }
+
+export default Queue;
