@@ -1,4 +1,5 @@
 import Queue from "./Queue.js";
+import tree from "pretty-tree";
 
 class TreeNode {
   constructor(data) {
@@ -8,9 +9,94 @@ class TreeNode {
   }
 }
 
+class NodeAndParent {
+  constructor(node, parent, isLeft) {
+    this.node = node;
+    this.parent = parent;
+    this.isLeft = isLeft;
+  }
+}
+
 class BinaryTree {
   constructor() {
     this.root = null;
+  }
+
+  // Binary Search Tree Insert
+  BSInsert(data) {
+    const newNode = new TreeNode(data);
+
+    if (this.root === null) {
+      this.root = newNode;
+      return;
+    }
+
+    let currentNode = this.root;
+
+    while (currentNode !== null) {
+      if (currentNode.data > data) {
+        if (currentNode.left === null) {
+          currentNode.left = newNode;
+          break;
+        } else {
+          currentNode = currentNode.left;
+        }
+      } else {
+        if (currentNode.right === null) {
+          currentNode.right = newNode;
+          break;
+        } else {
+          currentNode = currentNode.right;
+        }
+      }
+    }
+  }
+
+  // Binary Search Tree Find
+  #BSFind(data) {
+    if (this.root === null) return null;
+
+    let currentNode = this.root;
+
+    while (currentNode) {
+      if (currentNode.data === data) {
+        return currentNode;
+      } else if (currentNode.data > data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+    }
+    return null;
+  }
+
+  // Binary Search Tree Node Exists or not
+  BSIsExist(data) {
+    return this.#BSFind(data) !== null;
+  }
+
+  // Binary Search Tree Find Node And Parent
+  findNodeAndParent(data) {
+    let currentNode = this.root;
+    let parent = null;
+    let nodeAndParent = null;
+    let isLeft = false;
+
+    while (currentNode) {
+      if (currentNode.data === data) {
+        nodeAndParent = new NodeAndParent(currentNode, parent, isLeft);
+        break;
+      } else if (currentNode.data > data) {
+        parent = currentNode;
+        isLeft = true;
+        currentNode = currentNode.left;
+      } else {
+        parent = currentNode;
+        isLeft = false;
+        currentNode = currentNode.right;
+      }
+    }
+    return nodeAndParent;
   }
 
   insert(data) {
@@ -166,60 +252,73 @@ class BinaryTree {
     }
   }
 
+  convertToPrettyTreeFormat(node) {
+    if (!node) return null;
+    return {
+      label: node.data,
+      nodes: [
+        this.convertToPrettyTreeFormat(node.left),
+        this.convertToPrettyTreeFormat(node.right),
+      ].filter((child) => child !== null),
+    };
+  }
+
   print() {
     if (this.root === null) {
       console.log("The tree is empty.");
       return;
     }
 
-    const q = new Queue();
-    q.enqueue({ node: this.root, level: 0 });
-    let currentLevel = 0;
-    let output = "";
-
-    while (q.hasData()) {
-      let { node, level } = q.dequeue();
-
-      if (level > currentLevel) {
-        console.log(output);
-        output = "";
-        currentLevel = level;
-      }
-
-      output += node.data + " ";
-
-      if (node.left !== null) {
-        q.enqueue({ node: node.left, level: level + 1 });
-      }
-
-      if (node.right !== null) {
-        q.enqueue({ node: node.right, level: level + 1 });
-      }
-    }
-
-    if (output.length > 0) {
-      console.log(output);
-    }
+    const treeForPrinting = this.convertToPrettyTreeFormat(this.root);
+    const printedTree = tree(treeForPrinting);
+    console.log(printedTree); // Final output
   }
 }
 
-const tree = new BinaryTree();
-tree.insert("A");
-tree.insert("B");
-tree.insert("C");
-tree.insert("D");
-tree.insert("E");
-tree.insert("F");
-tree.insert("G");
-tree.insert("H");
-tree.insert("I");
+const bTree = new BinaryTree();
+// bTree.insert("A");
+// bTree.insert("B");
+// bTree.insert("C");
+// bTree.insert("D");
+// bTree.insert("E");
+// bTree.insert("F");
+// bTree.insert("G");
+// bTree.insert("H");
+// bTree.insert("I");
 
-console.log("Height " + tree.height());
+// console.log("Height " + bTree.height());
 
-console.log(tree.find("D"));
+// console.log(bTree.find("D"));
 
-tree.print();
+// bTree.print();
 
-console.log("----------");
-tree.delete("C");
-tree.print();
+// console.log("----------");
+// bTree.delete("C");
+// bTree.print();
+
+// bTree.BSInsert(1);
+// bTree.BSInsert(2);
+// bTree.BSInsert(3);
+// bTree.BSInsert(4);
+// bTree.BSInsert(5);
+// bTree.BSInsert(6);
+
+// bTree.BSInsert(1);
+// bTree.BSInsert(4);
+// bTree.BSInsert(2);
+// bTree.BSInsert(3);
+// bTree.BSInsert(6);
+// bTree.BSInsert(5);
+
+bTree.BSInsert(4);
+bTree.BSInsert(2);
+bTree.BSInsert(1);
+bTree.BSInsert(3);
+bTree.BSInsert(5);
+bTree.BSInsert(6);
+
+console.log(bTree.BSIsExist(10));
+
+console.log(bTree.findNodeAndParent(3));
+
+bTree.print();
