@@ -22,6 +22,30 @@ class BinaryTree {
     this.root = null;
   }
 
+  balance() {
+    const nodes = [];
+    this.inOrderToArray(this.root, nodes);
+    this.root = this.recursiveBalance(0, nodes.length - 1, nodes);
+  }
+
+  inOrderToArray(node, nodes) {
+    if (node == null) return;
+
+    this.inOrderToArray(node.left, nodes);
+    nodes.push(node.data);
+    this.inOrderToArray(node.right, nodes);
+  }
+
+  recursiveBalance(start, end, nodes) {
+    if (start > end) return null;
+
+    let mid = Math.floor((start + end) / 2);
+    const newNode = new TreeNode(nodes[mid]);
+    newNode.left = this.recursiveBalance(start, mid - 1, nodes);
+    newNode.right = this.recursiveBalance(mid + 1, end, nodes);
+    return newNode;
+  }
+
   // Binary Search Tree Insert
   BSInsert(data) {
     const newNode = new TreeNode(data);
@@ -370,34 +394,46 @@ const bTree = new BinaryTree();
 // bTree.BSInsert(6);
 // bTree.BSInsert(5);
 
-bTree.BSInsert(4);
-bTree.BSInsert(6);
-bTree.BSInsert(7);
-bTree.BSInsert(5);
-bTree.BSInsert(2);
-bTree.BSInsert(1);
-bTree.BSInsert(3);
+// bTree.BSInsert(4);
+// bTree.BSInsert(6);
+// bTree.BSInsert(7);
+// bTree.BSInsert(5);
+// bTree.BSInsert(2);
+// bTree.BSInsert(1);
+// bTree.BSInsert(3);
 
 // console.log(bTree.BSIsExist(10));
 
 // console.log(bTree.findNodeAndParent(3));
-bTree.BSDelete(4);
+// bTree.BSDelete(4);
+// bTree.print();
+
+// bTree.BSDelete(6);
+// bTree.print();
+
+// bTree.BSDelete(3);
+// bTree.print();
+
+// bTree.BSDelete(5);
+// bTree.print();
+
+// bTree.BSDelete(7);
+// bTree.print();
+
+// bTree.BSDelete(2);
+// bTree.print();
+
+// bTree.BSDelete(1);
+// bTree.print();
+
+bTree.BSInsert(1);
+bTree.BSInsert(2);
+bTree.BSInsert(3);
+bTree.BSInsert(4);
+bTree.BSInsert(5);
+bTree.BSInsert(6);
+bTree.BSInsert(7);
 bTree.print();
 
-bTree.BSDelete(6);
-bTree.print();
-
-bTree.BSDelete(3);
-bTree.print();
-
-bTree.BSDelete(5);
-bTree.print();
-
-bTree.BSDelete(7);
-bTree.print();
-
-bTree.BSDelete(2);
-bTree.print();
-
-bTree.BSDelete(1);
+bTree.balance();
 bTree.print();
