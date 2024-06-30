@@ -252,6 +252,66 @@ class BinaryTree {
     }
   }
 
+  BSDelete(data) {
+    const nodeAndParentInfo = this.findNodeAndParent(data);
+
+    if (nodeAndParentInfo.node === null) return;
+
+    if (
+      (nodeAndParentInfo.node.left !== null) &
+      (nodeAndParentInfo.node.right !== null)
+    ) {
+      this.#BSDelete_Has_Childs(nodeAndParentInfo.node);
+    } else if (
+      (nodeAndParentInfo.node.left !== null) ^
+      (nodeAndParentInfo.node.right !== null)
+    ) {
+      this.#BSDelete_Has_One_Child(nodeAndParentInfo.node);
+    } else {
+      this.#BSDelete_Leaf(nodeAndParentInfo);
+    }
+  }
+
+  #BSDelete_Has_Childs(nodeToDelete) {
+    let currentNode = nodeToDelete.right;
+    let parent = null;
+
+    while (currentNode.left !== null) {
+      parent = currentNode;
+      currentNode = currentNode.left;
+    }
+    if (parent !== null) {
+      parent.left = currentNode.right;
+    } else {
+      nodeToDelete.right = currentNode.right;
+    }
+    nodeToDelete.data = currentNode.data;
+  }
+
+  #BSDelete_Has_One_Child(nodeToDelete) {
+    let nodeToReplace = null;
+    if (nodeToDelete.left !== null) {
+      nodeToReplace = nodeToDelete.left;
+    } else {
+      nodeToReplace = nodeToDelete.right;
+    }
+    nodeToDelete.data = nodeToReplace.data;
+    nodeToDelete.left = nodeToReplace.left;
+    nodeToDelete.right = nodeToReplace.right;
+  }
+
+  #BSDelete_Leaf(nodeToDelete) {
+    if (nodeToDelete.parent === null) {
+      this.root = null;
+    } else {
+      if (nodeToDelete.isLeft) {
+        nodeToDelete.parent.left = null;
+      } else {
+        nodeToDelete.parent.right = null;
+      }
+    }
+  }
+
   convertToPrettyTreeFormat(node) {
     if (!node) return null;
     return {
@@ -311,14 +371,33 @@ const bTree = new BinaryTree();
 // bTree.BSInsert(5);
 
 bTree.BSInsert(4);
+bTree.BSInsert(6);
+bTree.BSInsert(7);
+bTree.BSInsert(5);
 bTree.BSInsert(2);
 bTree.BSInsert(1);
 bTree.BSInsert(3);
-bTree.BSInsert(5);
-bTree.BSInsert(6);
 
-console.log(bTree.BSIsExist(10));
+// console.log(bTree.BSIsExist(10));
 
-console.log(bTree.findNodeAndParent(3));
+// console.log(bTree.findNodeAndParent(3));
+bTree.BSDelete(4);
+bTree.print();
 
+bTree.BSDelete(6);
+bTree.print();
+
+bTree.BSDelete(3);
+bTree.print();
+
+bTree.BSDelete(5);
+bTree.print();
+
+bTree.BSDelete(7);
+bTree.print();
+
+bTree.BSDelete(2);
+bTree.print();
+
+bTree.BSDelete(1);
 bTree.print();
