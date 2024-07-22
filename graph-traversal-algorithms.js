@@ -61,6 +61,23 @@ class Graph {
     this.restoreVertices();
   }
 
+  DFS() {
+    console.log("DFS running");
+    this.DFSRecursion(this.vertices[0]);
+    this.restoreVertices();
+  }
+
+  DFSRecursion(currentVertex) {
+    currentVertex.visited = true;
+    let destinations = currentVertex.vertexLinks;
+    for (let i = 0; i < destinations.length; i++) {
+      if (destinations[i].target.visited == false) {
+        console.log(currentVertex.name + " - " + destinations[i].target.name);
+        this.DFSRecursion(destinations[i].target);
+      }
+    }
+  }
+
   restoreVertices() {
     for (const v of this.vertices) {
       v.visited = false;
@@ -79,3 +96,4 @@ graph.addEdges(6, [7, 8]);
 graph.addEdges(7, [5, 6, 8]);
 graph.addEdges(8, [6, 7]);
 graph.BFS();
+graph.DFS();
