@@ -4,6 +4,8 @@ class Vertex {
   constructor() {
     this.name = "";
     this.visited = false;
+    this.totalLength = 0;
+    this.sourceOfTotalLength = null;
     this.vertexLinks = [];
   }
 }
@@ -27,11 +29,12 @@ class Graph {
     }
   }
 
-  addEdges(vertexIndex, targets) {
+  addEdges(vertexIndex, targets, weights) {
     for (let i = 0; i < targets.length; i++) {
       this.vertices[vertexIndex].vertexLinks[i] = new Edge(
         this.vertices[vertexIndex],
-        this.vertices[targets[i]]
+        this.vertices[targets[i]],
+        weights[i]
       );
     }
   }
@@ -78,22 +81,65 @@ class Graph {
     }
   }
 
+  Dijkastra() {
+    console.log("Dijkastra running");
+    for (let i = 1; i < this.vertices.length; i++) {
+      this.vertices[i].totalLength = Number.MAX_VALUE;
+    }
+
+    let currentVertex;
+    for (let i = 0; i < this.vertices.length; i++) {
+      currentVertex = this.vertices[i];
+      let destinations = currentVertex.vertexLinks;
+      if (destinations == null) continue;
+
+      let currentEdge;
+      for (let j = 0; j < destinations.length; j++) {
+        currentEdge = destinations[j];
+        let newLength = currentVertex.totalLength + currentEdge.weight;
+
+        if (newLength < currentEdge.target.totalLength) {
+          currentEdge.target.totalLength = newLength;
+          currentEdge.target.sourceOfTotalLength = currentVertex;
+        }
+      }
+    }
+    let path = this.vertices[this.vertices.length - 1].name;
+    let v = this.vertices[this.vertices.length - 1];
+
+    while (v.sourceOfTotalLength != null) {
+      path = v.sourceOfTotalLength.name + " - " + path;
+      v = v.sourceOfTotalLength;
+    }
+
+    console.log(this.vertices[this.vertices.length - 1].totalLength);
+    console.log(path);
+  }
+
   restoreVertices() {
     for (const v of this.vertices) {
       v.visited = false;
+      v.totalLength = 0;
+      v.sourceOfTotalLength = null;
     }
   }
 }
 
-const graph = new Graph(["A", "B", "C", "D", "E", "F", "G", "H", "I"]);
-graph.addEdges(0, [1, 2]);
-graph.addEdges(1, [0, 3, 4]);
-graph.addEdges(2, [0, 3, 5]);
-graph.addEdges(3, [1, 2, 4]);
-graph.addEdges(4, [1, 5]);
-graph.addEdges(5, [2, 3, 4, 7]);
-graph.addEdges(6, [7, 8]);
-graph.addEdges(7, [5, 6, 8]);
-graph.addEdges(8, [6, 7]);
-graph.BFS();
-graph.DFS();
+const graph = new Graph(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]);
+graph.addEdges(0, [1, 2, 3], [2, 4, 3]);
+
+graph.addEdges(1, [4, 5, 6], [7, 4, 6]);
+graph.addEdges(2, [4, 5, 6], [3, 2, 4]);
+graph.addEdges(3, [4, 5, 6], [4, 1, 5]);
+
+graph.addEdges(4, [7, 8], [1, 4]);
+graph.addEdges(5, [7, 8], [6, 3]);
+graph.addEdges(6, [7, 8], [3, 3]);
+
+graph.addEdges(7, [9], [3]);
+graph.addEdges(8, [9], [4]);
+
+// graph.BFS();
+// graph.DFS();
+
+graph.Dijkastra();
